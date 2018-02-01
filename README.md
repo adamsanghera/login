@@ -2,13 +2,16 @@
 
 ## Features
 
-Note, that this service is designed after the Command Query Responsibilty Segregation [CQRS] pattern.  This means that there are two categories of messages parsed by this service.  `Commands`, which change the 'internal' state of the service, and `Queries`, which provide surgical glimpses of that same state.
+Designed with Command Query Responsibilty Segregation [CQRS] pattern.
+Implies two kinds of functions.
+1. `Commands` change the 'internal' state of the service
+2. `Queries` provide glimpses of a state.
 
-So, what `commands` would you expect a login service to perform?
+What `Commands` would you expect a login service to perform?
 
-1. Create multiple, distinct "categories" of authorization. --> `Registration`
-2. Issue tokens, verifiable badges of memers --> `Capability-provision`
-3. Verify a token's membership --> `Validation`
+1. Create distinct "categories" of authorization. --> `Registration`
+2. Issue verifiable tokens of members --> `Capability-provision`
+3. Validate the authenticity of a token --> `Validation`
 
 What `queries` would you expect a login service to answer?
 
@@ -87,3 +90,26 @@ So now we're sending hashed data over HTTPS.  Most modern browsers support HTTPS
 Maintain a verifiable history of token validations, blockchain style.
 
 Who validated what, and when?
+
+# Settling on satisfactory terms
+
+I'd like to find a minimum set of satisfactory terms that describes all of the features of this system in a clear and intuitive way.
+
+Some terms that have crossed my mind: 
+
+* login (and log out) [vs session]
+* register (for a domain, delete) 
+* token (provision, exchange, renewal, revocation, validation) [vs badge]
+* badge (provision, exchange, renewal, revocation, validation) [vs badge]
+* domain (authorized, unauthorized, registered, unregistered, open, closed, private, public)
+* session (begin, end, fundamentally tied to a domain).
+
+I think I have settled on the following mental model:
+1. A set of domains exists, D = {D1, D2, D3, ...}
+2. A set of users exists, U = {U1, U2, U3, ...}
+3. There are two kinds of relations between users and domains.
+  1. Membership relation M(Dx, Uy), indicating that Uy is a registered member of Dx.
+  2. Session relation S(Dx, Uy), indicating that Uy has been issued a badge indicating that they are currently <em>active</em> within Dx
+4. A Session relation S(Dx, Uy) implies a Membership relation M(Dx, Uy)
+5. A Membership relation can be created by R(Dx, Uy, Uz), which indicates that Uy has applied for membership to Dx, and their application has been signed by Uz.
+5. Domains have specific <em>membership constraints</em>, restricting whic
