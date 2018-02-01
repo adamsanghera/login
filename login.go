@@ -2,6 +2,8 @@ package login
 
 import (
 	"time"
+
+	"github.com/adamsanghera/category"
 )
 
 // Authenticator is an interface for services providing authentication.
@@ -24,21 +26,10 @@ type Badge interface {
 	Revoke() error
 
 	// Queries
-	BelongsTo() Category
+	BelongsTo() category.Category
 	Create() (uid interface{}, bid interface{}, badgeScanner Authenticator, timeToLive time.Duration, err error)
 	Refresh() (uid interface{}, bid interface{}, badgeScanner Authenticator, timeToLive time.Duration, err error)
 	Validate(uid interface{}, bid interface{}, badgeScanner Authenticator) (bool, error)
-}
-
-// Category is an interface for forming users into groups.
-// Category is the nation, which users are citizens of.
-// Membership in a category is maintained by a sorted list.
-type Category interface {
-	// Commands
-	AddUser(uid interface{}) error
-	RemoveUser(uid interface{}) error
-
-	Contains(uid interface{}) (bool, error)
 }
 
 // Login is a unified interface for managing Categories, Badges, and Authenticators.
