@@ -1,8 +1,6 @@
 package login
 
 import (
-	"github.com/adamsanghera/authenticator"
-	"github.com/adamsanghera/badge"
 	"github.com/adamsanghera/category"
 )
 
@@ -21,15 +19,15 @@ type Login interface {
 	// Commands on people, irrespective of categories
 	MakeUser(uid interface{}) error
 	RemoveUser(uid interface{}, challenge interface{}) error
-	AddAuth(uid interface{}, challenge interface{}, identifier authenticator.Authenticator) error
-	RemoveAuth(uid interface{}, challenge interface{}, identifier authenticator.Authenticator) error
+	AddAuth(uid interface{}, challenge interface{}) error
+	RemoveAuth(uid interface{}, challenge interface{}) error
 
 	// Commands regarding badges
-	ReturnBadge(badge.Badge) error
+	ReturnBadge(string) error
 
 	// Queries regarding badges
 	ValidateBadge(bid interface{}) (bool, error)
-	MintBadge(uid interface{}, challenge interface{}, cid category.Category) (badge.Badge, error)
+	MintBadge(uid interface{}, challenge interface{}, cid category.Category) (string, error)
 
 	// Queries on categories
 	CategoryExists(cid category.Category) (bool, error)
